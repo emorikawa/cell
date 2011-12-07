@@ -1,0 +1,221 @@
+//// VARIABLES ////
+@primarycolor: #444;
+@bgcolor: #ebebeb;
+
+//// MIXINS ////
+.clear() {
+  zoom: 1;
+  &:before,
+  &:after {
+    display: table;
+    content: "";
+    zoom: 1;
+    *display: inline;
+  }
+  &:after {
+    clear: both;
+  }
+}
+
+.rotate(@deg) {
+  -webkit-transform:rotate(@deg);
+     -moz-transform:rotate(@deg);
+      -ms-transform:rotate(@deg);
+       -o-transform:rotate(@deg);
+          transform:rotate(@deg);
+}
+
+.opacity (@val: 1) {
+  @val10: @val * 100;
+  -khtml-opacity: @val;
+    -moz-opacity: @val;
+         opacity: @val;
+  // NOTE: filter must come before -ms-filter in order to work in IE8
+  filter: alpha(opacity=@val10);
+  -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=@{val10})";
+}
+
+.gradient (@startColor, @endColor) {
+  background-color: @endColor;
+  background-repeat: repeat-x;
+  background-image: -khtml-gradient(linear, left top, left bottom, from(@startColor), to(@endColor)); // Konqueror
+  background-image: -moz-linear-gradient(top, @startColor, @endColor); // FF 3.6+
+  background-image: -ms-linear-gradient(top, @startColor, @endColor); // IE10
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, @startColor), color-stop(100%, @endColor)); // Safari 4+, Chrome 2+
+  background-image: -webkit-linear-gradient(top, @startColor, @endColor); // Safari 5.1+, Chrome 10+
+  background-image: -o-linear-gradient(top, @startColor, @endColor); // Opera 11.10
+  background-image: linear-gradient(top, @startColor, @endColor); // The standard
+  filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)",@startColor,@endColor)); // IE9 and down
+}
+
+.border-radius(@radius: 3px) {
+  -webkit-border-radius: @radius;
+     -moz-border-radius: @radius;
+          border-radius: @radius;
+}
+
+.shadow (@x: 3px, @y: 3px, @blur: 7px, @color: #111) {
+  -webkit-box-shadow: @arguments;
+     -moz-box-shadow: @arguments;
+          box-shadow: @arguments;
+}
+
+//// DOM TAGS ////
+html, body {
+  margin:0;
+  border:0;
+  padding:0;
+
+  color:@primarycolor;
+  font-family: 'Droid Sans', sans-serif;
+  font-size:18px;
+  text-align:center;
+
+  background: @bgcolor url(http://subtlepatterns.com/patterns/leather_1.png) repeat;
+}
+
+a {
+  color:#888;
+  font-weight:bold;
+}
+
+input[type="text"] {
+  padding:5px 10px;
+  font-size:30px;
+  font-family:inherit;
+  width:400px;
+  vertical-align:middle;
+  color:@primarycolor;
+}
+
+button {
+  position:relative;
+  vertical-align:middle;
+
+  margin:5px;
+  border:1px solid #bbb;
+  padding:5px 15px;
+  background:@bgcolor;
+
+  color:@primarycolor;
+
+  .border-radius(3px);
+  .shadow(1px, 1px, 3px, rgba(0,0,0,0.3));
+}
+
+button:hover {
+  cursor:pointer;
+
+  .shadow(2px, 2px, 6px, rgba(0,0,0,0.3));
+  .gradient(darken(@bgcolor,2%), lighten(@bgcolor,5%));
+}
+
+button:active {
+  top:1px;
+  left:1px;
+
+  .shadow(1px, 1px, 2px, rgba(0,0,0,0.3));
+
+  background: @bgcolor;
+}
+
+button.search {
+  font-size:24px;
+  padding:9px 9px;
+}
+
+//// Gallery ////
+.gallery img {
+  height:300px;
+  .border-radius(3px);
+}
+
+.gallery {
+  padding:20px 0 0 30px;
+}
+
+.tweet_gallery_wrap {
+  position:relative;
+  margin:15px;
+}
+.tweet_gallery {
+  position:relative;
+  float:left;
+
+  margin:0 30px 30px 0;
+  border:1px solid #bbb;
+  background:@bgcolor;
+
+  .border-radius(3px);
+  .shadow(1px, 3px, 13px, rgba(0,0,0,0.5);
+}
+.tweet_gallery:before, .tweet_gallery:after {
+  position:absolute;
+  bottom:9px;
+  left:5px;
+  z-index:-2;
+
+  width:48%;
+  height:20%;
+
+  content:"";
+
+  .shadow(0px,20px,15px,rgba(0,0,0,0.3);
+  .rotate(-4deg);
+}
+.tweet_gallery:after {
+  right:10px;
+  left:auto;
+  .rotate(4deg);
+}
+
+.pic_wrap {
+  text-align:center;
+  overflow:hidden;
+}
+
+//// Fetcher ////
+.fetcher {
+  padding:15px 0 15px 0;
+  border-bottom:2px solid rgba(0,0,0,0.1);
+  background: rgba(0,0,0,0.1)
+}
+
+.tweet_listing {
+  margin:10px auto;
+  border:2px solid rgba(0,0,0,0.1);
+  padding:5px 10px;
+  width:640px;
+
+  text-align:left;
+
+  background: #aaa;
+  background: rgba(0,0,0,0.1);
+
+  .border-radius(2px);
+}
+
+.tweet_gallery .tweet_wrap {
+  display:none;
+  position:absolute;
+  left:0;
+  bottom:0;
+
+  width:100%;
+
+  font-size:14px;
+  text-align:left;
+  color:#dddddd;
+
+  background: #333;
+  background: rgba(0,0,0,0.7);
+}
+.tweet_gallery .tweet {
+  margin:10px;
+}
+
+.tweet_info {
+  margin-top:5px;
+  font-size:12px;
+  color:#888;
+}
