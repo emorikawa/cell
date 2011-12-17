@@ -184,10 +184,10 @@ class TweetGalleryView extends TweetView
     pics += "<img src='#{pic}'/>" for pic in @D('pics')
     pics += "</div>"
     """
-    <div class="tweet_gallery"><div class="tweet_gallery_wrap">
+    <figure class="tweet_gallery"><div class="tweet_gallery_wrap">
       <div class="pic_wrap">#{pics}</div>
-      <div class="tweet_wrap">#{super()}</div>
-    </div></div>
+      <figcaption class="tweet_wrap">#{super()}</figcaption>
+    </div></figure>
     """
 # The layout for a single tweet in List mode
 class TweetListingView extends TweetView

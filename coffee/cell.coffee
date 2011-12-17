@@ -156,12 +156,10 @@ class Cell.Model extends Cell.Object
 
   # Calls `render` on given view names. If no parameters are passed in,
   # `render` is called on all views.
-  renderViews: (names ...) ->
+  renderViews: (names...) ->
     if names.length is 0 then view.render() for name, view of @_views
     else @_views[name]?.render() for name in names
 
-  # Retrieves a view by it's string `view_name`. All `Cell.View`s are required
-  # to have names.
   getCollection: (collection_name) -> @_collections[collection_name]
   # `collection_obj` must be an instance of `Cell.Collection`
   # It is keyed the the collection's name
@@ -187,12 +185,12 @@ class Cell.Collection extends Cell.Model
   # By default, each time an object is added, the collection's views render.
   # If objects are added in a list, rendering is by default called only once.
   # By default, items are unshifted onto the internal list.
-  add: (obj, silent=false, push=false) ->
+  add: (obj, silent=false, direction="push") ->
     if obj instanceof Array
-      @add indv_obj, "silent", push for indv_obj in obj
+      @add indv_obj, "silent", direction for indv_obj in obj
     else
-      if push is "push" or push is true then @_collections.push obj
-      else if push is "unshift" or push is false then @_collections.unshift obj
+      if direction is "push" then @_collections.push obj
+      else if direction is "unshift" then @_collections.unshift obj
       obj.addCollection @
 
     if silent is "silent" or silent is true then null
@@ -208,6 +206,8 @@ class Cell.Collection extends Cell.Model
   # Checks the collection for a duplicate of an object on a given field in
   # a collection. Returns true if duplicate exists, false otherwise
   hasDuplicate: (obj, field, collection) ->
+    if not collection? then collection = @getAll()
+    if not field? then field = "cell_id"
     for item in collection
       if obj.D(field) is item.D(field) then return true else continue
     return false
@@ -249,11 +249,15 @@ class Cell.Collection extends Cell.Model
 
   # Get an item in the collection whose key value pair matches
   get: (key, value) ->
+    ret = []
     for a in @getAll()
-      if a.D(key)? and a.D(key) is value
-        return a
+      ret.push a if a.D(key)? and a.D(key) is value
 
-    return undefined
+    if ret.length is 0
+      return undefined
+    else if ret.length is 1
+      return ret[0]
+    else return ret
 
 # View
 # ----

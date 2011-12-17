@@ -1,0 +1,150 @@
+@import "reset.less";
+
+//// VARIABLES ////
+@primarycolor: #444;
+@bgcolor: #ebebeb;
+
+//// MIXINS ////
+.clear() {
+  zoom: 1;
+  &:before,
+  &:after {
+    display: table;
+    content: "";
+    zoom: 1;
+    *display: inline;
+  }
+  &:after {
+    clear: both;
+  }
+}
+
+.rotate(@deg) {
+  -webkit-transform:rotate(@deg);
+     -moz-transform:rotate(@deg);
+      -ms-transform:rotate(@deg);
+       -o-transform:rotate(@deg);
+          transform:rotate(@deg);
+}
+
+.opacity (@val: 1) {
+  @val10: @val * 100;
+  -khtml-opacity: @val;
+    -moz-opacity: @val;
+         opacity: @val;
+  // NOTE: filter must come before -ms-filter in order to work in IE8
+  filter: alpha(opacity=@val10);
+  -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=@{val10})";
+}
+
+.gradient (@startColor, @endColor) {
+  background-color: @endColor;
+  background-repeat: repeat-x;
+  background-image: -khtml-gradient(linear, left top, left bottom, from(@startColor), to(@endColor)); // Konqueror
+  background-image: -moz-linear-gradient(top, @startColor, @endColor); // FF 3.6+
+  background-image: -ms-linear-gradient(top, @startColor, @endColor); // IE10
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, @startColor), color-stop(100%, @endColor)); // Safari 4+, Chrome 2+
+  background-image: -webkit-linear-gradient(top, @startColor, @endColor); // Safari 5.1+, Chrome 10+
+  background-image: -o-linear-gradient(top, @startColor, @endColor); // Opera 11.10
+  background-image: linear-gradient(top, @startColor, @endColor); // The standard
+  filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)",@startColor,@endColor)); // IE9 and down
+}
+
+.border-radius(@radius: 3px) {
+  -webkit-border-radius: @radius;
+     -moz-border-radius: @radius;
+          border-radius: @radius;
+}
+
+.shadow (@x: 3px, @y: 3px, @blur: 7px, @color: #111) {
+  -webkit-box-shadow: @arguments;
+     -moz-box-shadow: @arguments;
+          box-shadow: @arguments;
+}
+
+//// DOM TAGS ////
+html, body {
+  color:@primarycolor;
+  font-family: 'Droid Sans', sans-serif;
+  font-size:16px;
+
+  background: @bgcolor;
+}
+
+h1 {
+  font-size:30px;
+  margin-bottom:.3em;
+}
+h2 {
+  font-size:26px;
+  font-weight:bold;
+  margin:1em 0 .4em 0;
+}
+h3 {
+  font-size:17px;
+  margin:1.3em 0 .3em 0;
+  font-family: 'Inconsolata', sans-serif;
+  font-weight:bold;
+}
+a {
+  color:#777;
+}
+
+p {
+  line-height:1.3;
+  margin:.8em 0;
+}
+
+ul {
+  list-style: disc inside none;
+}
+ol {
+  list-style: decimal inside none;
+}
+li {
+  line-height:1.4;
+}
+
+header {
+  margin-top:20px;
+
+  h1 {
+    font-size:50px;
+  }
+  h2 {
+    font-size:16px;
+    font-weight:normal;
+  }
+}
+
+section {
+  margin:10px 0;
+}
+
+section.chapter {
+  margin:30px 0;
+  border-top:1px solid #aaa;
+  padding-top:10px;
+}
+
+pre, code {
+  font-family: 'Inconsolata', sans-serif;
+  font-size:14px;
+}
+code {
+  background:#ddd;
+}
+
+.wrap {
+  width:640px;
+  margin:0 auto;
+}
+
+.cell_class {
+  h2 {
+    color:#336699;
+  }
+  h3 {
+    color:darken(#336699,20%);
+  }
+}

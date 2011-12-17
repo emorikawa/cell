@@ -1,10 +1,459 @@
-<!DOCTYPE HTML>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title></title>
+  <title>Cell</title>
+
+  <meta charset="utf-8">
+  <meta name="description" content="Cell">
+  <meta name="author" content="Evan Morikawa">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Droid+Sans" />
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Inconsolata" />
+  <script src="js/libs/modernizr-2.0.6.min.js"></script>
 </head>
-<body>
-  Hello Github Pages World
-</body>
+
+<body><div class="wrap">
+
+  <nav>
+  </nav>
+
+  <header>
+    <hgroup>
+    <h1>Cell</h1>
+    <h2>A Coffeescript mini framework for very dynamic, javascript-rendered web applications</h2>
+    </hgroup>
+  </header>
+
+  <section class="chapter" id="use_cell">
+    <h1>Using Cell</h1>
+
+    <ul>
+    <li>Download the <strong>coffescript</strong> file here: <a href="/">cell.0.1.0.coffee</a></li>
+    <li>Download the compiled <strong>javascript</strong> file here: <a href="/">cell.0.1.0.js</a></li>
+    <li>See the <strong>example app</strong> here: <a href="/">Cell example app</a></li>
+    <li>Fork on <strong>Github</strong> here: <a href="https://github.com/emorikawa/cell">https://github.com/emorikawa/cell</a></li>
+    <li>See the <strong>annotated source</strong> here: <a href="/"></a></li>
+    <li><strong>Clone the repo</strong> from Github here: <a href="git@github.com:emorikawa/cell.git">git@github.com:emorikawa/cell.git</a></li>
+    </ul>
+
+    <p>The only dependency is [jQuery][http://jquery.com].</p>
+  </section>
+
+  <section class="chapter" id="getting_started">
+    <h1>Getting Started</h1>
+
+    <ol>
+    <li>Skim this whole page</li>
+    <li>Read <a href="">Building a Cell App Step 1</a></li>
+    <li>Read <a href="">Building a Cell App Step 2</a></li>
+    <li>Read <a href="">Building a Cell App Step Done</a></li>
+    </ol>
+  </section>
+
+  <section class="chapter" id="what_is_cell">
+    <h1>What is Cell</h1>
+
+    <p><strong>Cell is a Coffeescript mini framework for very dynamic, javascript-rendered web applications.</strong></p>
+
+    <p>That means we're a single [coffee|java]script include which helps you easily build extremely interactive web applications on the front-end, for the front-end.</p>
+
+    <p>First, divide up your web app into individual, compartmentalized modules &amp; components - or <em>Cells</em> as we call them.</p>
+
+    <p>Each <em>Cell</em> has a <em>Model</em> which holds and manipulates data.</p>
+
+    <p>Each <em>Cell</em> has a <em>View</em> which controls how it should be displayed and interacted with.</p>
+
+    <p>The work that is traditionally taken up with a controller is instead divided between Views and Models. Any methods that deal with data are part of Models; any methods that deal with the display are part of Views.</p>
+
+    <p><strong>Almost everything on a page is rendered by Cell.</strong></p>
+
+    <p>To see what we mean by this, look at the [page source][] for our [example app][]. See how with only two lines of html in the body we can make a fairly fancy dyanmic application!</p>
+
+    <p>Now look at the single [coffeescript source file][] for the example app. That's it. ~200 lines, including comments, a couple of Cells, and a bit of parsing logic.</p>
+  </section>
+
+  <section class="chapter" id="why_cell">
+    <h1>Why Cell</h1>
+
+    <p>First of all, I love frameworks like <a href="http://documentcloud.github.com/backbone">backbone</a>, and I think the work <a href="http://brunch.io">Brunch</a> has done is cool too. However, when we were developing <a href="http://shadowbox.me">Shadowbox</a> and started geting slogged in a myriad of rendering queues, and slow jQuery appends, &amp; prepends, I began looking for a better solution.</p>
+
+    <p><strong>Fast, robuts, rendering:</strong>
+    Instead of building a dynamic page from delta to delta, always have an absolute singular reprsentation of each Cell, that on each major change can be confidently and entirely replaced in one go. Since DOM replacement is about as close as you can get to browser's repainters, and you now don't need to worry about getting elements off sync anymore, Cell uses a render-replace method to display everything.</p>
+
+    <p><strong>Testing known outputs:</strong>
+    Futhermore, when each Cell's view outputs a known single chunck of rendered HTML, we have a clear string that can be tested. This means the Views can be hooked up to test frameworks, fed test data, and automatically validated.</p>
+
+    <p><strong>Super lightweight</strong>
+    Cell is quite small. It was deceptively hard to make this true. If something wasn't absolutely necessary, it didn't get included. It's likely the case that as a result, some things are still missing. That's why we need your help to improve it.</p>
+  </section>
+
+  <section class="chapter" id="help_build_cell">
+    <h1>Help Build Cell!</h1>
+
+    <ul>
+    <li>Submit [issues on Github][]</li>
+    <li>Fork the [code][]</li>
+    <li>Complain to Evan Morikawa at: {First}@{FirstLast}.com</li>
+    <li>Tweet to {a yet to be setup Twitter handle}</li>
+    </ul>
+  </section>
+
+  <section class="chapter" id="the_api">
+    <h1>The API</h1>
+
+    <p>Each Cell has a <code>Model</code> and zero or more <code>View</code>s.</p>
+
+    <p><code>Collection</code>s are <code>Model</code>s that can easily hold many other <code>Model</code>s.</p>
+
+    <p>A <code>PageManager</code> is used to setup and initialize the framework as well as manage things that happen outside of any single Cell.</p>
+
+    <p>All objects:
+    * inherit from <code>Cell.Object</code>
+    * have unique IDs stored in <code>@cell_id</code>
+    * have a string name stored in <code>@name</code>
+    * can <code>subscribe</code> to and <code>trigger</code> custom inter-Cell events</p>
+
+    <section class="cell_class" id="cell_object">
+      <h2>Cell.Object</h2>
+
+      <p>All objects inherit from <code>Cell.Object</code></p>
+
+      <h3>subscribe: (event, callback)</h3>
+
+      <p>Binds a <code>callback</code> function to an arbitrary string <code>event</code>. Events are always global and are the primary mechanism of inter-cell communication. Do not abuse.</p>
+
+      <pre><code>@subscribe "new_items", @handleNewItems
+
+      handleNewItems = (args...) -&gt; alert args.length
+      </code></pre>
+
+      <h3>unsubscribe: (event)</h3>
+
+      <p>Unbinds <code>this</code> object from the <code>event</code></p>
+
+      <h3>trigger: (event, args...)</h3>
+
+      <p>Triggers the <code>event</code>. Any an all objects subscribed to the <code>event</code> get their bound callbacks called with <code>args...</code> passed in. Since Cells should be independent, if inter-cell communication is necessary, or events happen that multiple Cells would care about, the Dispatcher is available to facilitate this need.</p>
+
+      <pre><code>@trigger "new_items", item_arr, my_options
+      </code></pre>
+    </section>
+
+    <section class="cell_class" id="cell_model">
+      <h2>Cell.Model</h2>
+
+      <p>Each Cell must have a <code>Model</code>. The Model is responsible for storing and manipulating the data of a Cell.</p>
+
+      <p>Interact with data through the getter/setter method <code>D</code>.</p>
+
+      <p>Models also hold references to the view(s) of the Cell and are responsible for managing those references.</p>
+
+      <h3>constructor: (setup)</h3>
+
+      <p><code>Model</code>s can be constructed with a key-value hash of options. The following are valid keys and their corresponding expected values:</p>
+
+      <ul>
+      <li><code>data</code> : A hash of key-value data records</li>
+      <li><code>name</code> : An optional custom string name for the Model. Defaults to class name</li>
+      <li><code>view</code> : A <code>View</code> constructor to be used as this Cell's singular view.</li>
+      <li><code>views</code> : An array of <code>View</code> constructors to allow the Cell to have multiple <code>view</code>s</li>
+      <li><p><code>initialize</code> : A custom method to be run at the end of object construction in scope of the object.</p>
+
+      <p>class Eukaryote extends Cell.Model</p>
+
+      <p>...</p>
+
+      <p>stem = new Eukaryote
+        data:
+          DNA: "ATCAGACTGGCATTACGCGATATG"
+          protein: "RCANNFAPLDAA"
+        name: "osmosis_jones"
+        views: [EukaryoteView, EukaryoteAlternateView]</p></li>
+      </ul>
+
+      <h3>D: ([data], [set_value])</h3>
+
+      <p>A multipurpose getter and setter for a <code>Model</code>s <code>D</code>ata. Since data access is so frequent and often times inline, the accessor method was intentionally shortened to one character.</p>
+
+      <pre><code>D() # Returns all of the data
+
+      D "foo" # Returns the data stored at key "foo"
+
+      D "foo", "bar" # Sets key "foo" to value "bar"
+
+      D {foo:'bar', baz:'cell'} # Extends data store with object
+      </code></pre>
+
+      <h3>getView: (view_name)</h3>
+
+      <p>Returns the <code>View</code> object with the given <code>view_name</code> string. This is why all objects have names.</p>
+
+      <h3>addView: (view_obj)</h3>
+
+      <p>Add a <code>View</code> object. It is stored using the <code>View</code>s <code>name</code>.</p>
+
+      <h3>createView: (view_constructor, setup)</h3>
+
+      <p>Creates a new <code>View</code> using the given <code>view_constructor</code>, passes in the <code>setup</code> params to the <code>view_constructor</code>, then adds it to this <code>Model</code>.</p>
+
+      <h3>setPrimaryView: (view_name)</h3>
+
+      <p>Assigns the special Model field <code>view</code> to the View given by <code>view_name</code>. Since many Cells only have one view, this acts as a convenience to refrain from having to explicitly go through the <code>getView</code> method each time the single view needs to be accessed.</p>
+
+      <h3>renderViews: ([names...])</h3>
+
+      <p>If <code>names...</code> is empty, calls <code>render</code> on all of this Model's views. Otherwise calls <code>render</code> on the views with names in the <code>names...</code> splat.</p>
+
+      <h3>getCollection: (collection_name)</h3>
+
+      <p>If this <code>Model</code> is part of a <code>Collection</code>, a named reference to that <code>Collection</code> will be stored. This returns a reference to that collection by its <code>collection_name</code>.</p>
+
+      <h3>addCollection: (collection_obj)</h3>
+
+      <p>Stores a reference to a collection that this <code>Model</code> is a part of.</p>
+    </section>
+
+    <section class="cell_class" id="cell_collection">
+      <h2>Cell.Collection</h2>
+
+      <p><code>Collection</code>s extend <code>Model</code> and are effectively a glorified ordered list of similar <code>Model</code> objects.</p>
+
+      <h3>constructor: (setup)</h3>
+
+      <p>Calls <code>Cell.Model#constructor</code> and passes in same args.</p>
+
+      <pre><code>spleen = new Organ
+        view: SpleenView
+      </code></pre>
+
+      <h3>length:</h3>
+
+      <h3>add: (obj, [silent=false], [direction="push"])</h3>
+
+      <p>Takes a single object, or list of objects, and adds them to the collection.</p>
+
+      <p>If <code>silent</code> is <code>false</code> or equal to <code>"silent"</code>, then this will not trigger a <code>render</code> on the Collection's views.</p>
+
+      <p>If <code>direction</code> can either be "push" or "unshift". This simply determines which side of the ordered list new elements are added to.</p>
+
+      <pre><code>@add cancer_cell
+      @add stem_cell, "silent", "unshift"
+      </code></pre>
+
+      <h3>onAdd: (obj)</h3>
+
+      <p><strong>OVERRIDE</strong> <code>onAdd</code> to perform custom actions every time an object is added to the collection.</p>
+
+      <h3>hasDuplicate: (obj, [field], [collection])</h3>
+
+      <p>Duplication is true if there is an object within the <code>collection</code> that has the same value for the given <code>field</code>. </p>
+
+      <p>By defualt <code>field</code> is the <code>cell_id</code> field that all Objects have.</p>
+
+      <p>By default <code>collection</code> is this <code>Collection</code> object's collection.</p>
+
+      <pre><code>@hasDuplicate new_cell, "genome"
+      </code></pre>
+
+      <h3>del: (obj, [silent=false])</h3>
+
+      <p>Removes object from the collection. Finds the object by its <code>cell_id</code>. Calls <code>render</code> on the <code>Collection</code>'s view(s) unless <code>silent</code> is set to false or "silent"</p>
+
+      <h3>removeAll: ([silent=false])</h3>
+
+      <p>Clears the collection and calls <code>render</code> unless specified otherwise</p>
+
+      <h3>replace: (newObjs, [silent=false])</h3>
+
+      <p>Completely replaces the collection with the list of <code>newObjs</code>. Does not merge.</p>
+
+      <h3>getAll:</h3>
+
+      <p>Returns all objects in the collection. Can be overriden to add filters, etc.</p>
+
+      <h3>get: (key, value):</h3>
+
+      <p>Returns all items in the collection that have a matching key and value pair.</p>
+
+      <pre><code>cell1 = @get "cell_id, "ab88001fcc920a3f880"
+      cell2 = @get "type", "stem"
+      </code></pre>
+    </section>
+
+    <section class="cell_class" id="cell_view">
+      <h2>Cell.View</h2>
+
+      <p>Each Cell has zero or more <code>Views</code>. The <code>View</code> class is designed to describe both how the Cell should render and handle any events and changes to the views.</p>
+
+      <p>Please read the documentation on the <code>render</code> method to learn how Cell renders views.</p>
+
+      <p>The associated model is stored in the View's special <code>model</code> field.</p>
+
+      <p>The data of the associated model can be accessed through the <code>D</code> method.</p>
+
+      <p>The HTML output of the View is defined in the user-overriden <code>template</code> method</p>
+
+      <p>The HTML jQuery representation of the <code>template</code> is stored in the View's special <code>$</code> field.</p>
+
+      <p>All jQuery and Cell events are defined and handled in the user-overriden <code>events</code> method.</p>
+
+      <p>Other views of other Cells may be recursively included in <code>templates</code> via the <code>include</code> method.</p>
+
+      <p>Views <strong>must</strong> be associated with a single <code>Model</code>. This is why Views are usually created through a Model's constructor method or through a Model's <code>createView</code> method.</p>
+
+      <p>It is good practice to construct Views that can be arbitrarily included in multiple places and environments. Cells should be as independent as possible and Views should reflect that.</p>
+
+      <h3>constructor: (model, [setup])</h3>
+
+      <p><code>Views</code> are usually automatically constructed in the creation of their corresponding <code>Models</code>. If they are to be initialized separately, a <code>model</code> must be defined.</p>
+
+      <p>Views are powerful when extended. Multiple views may inherit from a common ancestor who provides basic templating and common methods.</p>
+
+      <p><code>setup</code> is a hash of valid setup options. The options and their accepted values are:</p>
+
+      <ul>
+      <li><code>name</code> : An optional custom string name for the Model. Defaults to class name</li>
+      <li><code>visible</code> : A boolean flag determining whether the view renders.</li>
+      <li><p><code>initialize</code> : A method to run once the view has been initialized</p>
+
+      <p>class MyView extends Cell.View
+      class MyOtherView extends Cell.View</p>
+
+      <p>...</p>
+
+      <p>mod = new MyModel
+        view: MyView</p>
+
+      <p>...</p>
+
+      <p>mod.createView MyOtherView, setup_hash</p>
+
+      <p>...</p>
+
+      <p>mod.addView new MyOtherView mod, setup_hash</p></li>
+      </ul>
+
+      <h3>D: ([data], [set])</h3>
+
+      <p>Shorthand alias that accesses the model's data. Does nothing more than: <code>@model.D(data, set)</code></p>
+
+      <h3>events:</h3>
+
+      <p><strong>OVERRIDE</strong> <code>events</code> to setup this View's event bindings. This is where both jQuery and Cell events are defined.</p>
+
+      <p>Some jQuery examples:
+          @$.bind "click", @onClick
+          @$.find(".target").bind "hover", @onMouseEnter, @onMouseLeave</p>
+
+      <p>Some Cell event examples:
+          @subscribe "socketUpdate", @onUpdate</p>
+
+      <p>Since every re-render creates a new @$ object, the <code>events</code> method is run after each and every render to refresh the bindings.</p>
+
+      <h3>template:</h3>
+
+      <p><strong>OVERRIDE</strong> <code>template</code> to define the HTML output of this View. Must return a valid HTML string.</p>
+
+      <p>Use coffeescript's string interpolation to make the view's dynamic.</p>
+
+      <p>Here is an example that uses the builtin @include method and other techniques:</p>
+
+      <pre><code>template: -&gt; """
+        &lt;div class="eukaryotes"&gt;
+          &lt;h1&gt;A nice cell&lt;/h1&gt;
+          #{@include @D('nucleus').view}
+          &lt;p&gt;Some cool stuff&lt;p&gt;
+        &lt;/div&gt;
+      """
+      </code></pre>
+
+      <h3>preRender:</h3>
+
+      <p><strong>OVERRIDE</strong> <code>preRender</code> to perform logic before a render happens. Since this is before a render, you should not assume that <code>$</code> template object has been inserted onto the DOM.</p>
+
+      <h3>render:</h3>
+
+      <p>Performs the following 6 major steps:</p>
+
+      <ol>
+      <li>Runs <code>preRender</code></li>
+      <li>Builds the <code>template</code> string (and recursively all <code>included</code> views) and wraps it in a div with the given <code>cell_id</code>. The wrap enables step 4 to happen</li>
+      <li>Inserts the string into the DOM</li>
+      <li>Re-connects each Cell's <code>$</code> field with the appropriate DOM node</li>
+      <li>Re-binds all events</li>
+      <li>Runs <code>postRender</code></li>
+      </ol>
+
+      <p>When render is inserting the template into the DOM, it looks for one of three things:
+      1. A div with an id equal to the <code>cell_id</code>
+      2. A div with a <code>data-cell</code> attribute equal to the name of the cell's Model
+      3. If none of the above can be found, it appends the element to the DOM <code>body</code></p>
+
+      <h3>postRender:</h3>
+
+      <p><strong>OVERRIDE</strong> <code>postRender</code> to perform logic after a render happens. This is the only place that one can guarantee the <code>$</code> template object exists on the DOM.</p>
+
+      <h3>setVisible: (status)</h3>
+
+      <p>Sets boolean <code>status</code> flag. When set to <code>false</code>, prevents the View from rendering and tries to hide the DOM nodes.</p>
+
+      <h3>include: (view)</h3>
+
+      <p>Returns the template string of the inculded <code>view</code> object. Also adds that sub-view in a list of views to recursively re-render. First runs the included <code>view</code>'s pre-render method before calling it's <code>template</code> method.</p>
+
+      <h3>buildCollection: (use_view)</h3>
+
+      <p>A convenience method that Views of Collections can use to automatically loop through and include views from all of the objects in its collection.</p>
+
+      <p><code>use_view</code> is required to specify which view to include from each object in the collection.</p>
+
+      <pre><code>template: -&gt;"""
+        #{super()}
+        &lt;div class="listing"&gt;
+          #{@buildCollection "TweetListingView"}
+        &lt;/div&gt;
+      """
+      </code></pre>
+    </section>
+
+    <section class="cell_class" id="cell_page_manager">
+      <h2>Cell.PageManager</h2>
+
+      <p>A class responsible for initializing the first views on a page and handling events that are not part of any Cell.</p>
+
+      <h3>init</h3>
+
+      <p><strong>OVERRIDE</strong> <code>init</code> to setup views. Automatically run when the PageManager gets constructed.</p>
+
+      <pre><code>init: -&gt;
+        stem = new Eukaryote
+          view: EukaryoteView
+
+        stem.view.render()
+      </code></pre>
+    </section>
+  </section>
+
+  <footer></footer>
+
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.1.min.js"><\/script>')</script>
+
+  <script defer src="js/main.js"></script>
+
+  <script>
+    var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
+    (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+    g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+    s.parentNode.insertBefore(g,s)}(document,'script'));
+  </script>
+
+  <!--[if lt IE 7 ]>
+    <script defer src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
+    <script defer>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
+  <![endif]-->
+</div></body>
 </html>
